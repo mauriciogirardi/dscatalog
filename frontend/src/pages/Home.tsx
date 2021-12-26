@@ -4,6 +4,7 @@ import { ButtonLink } from 'components/ButtonLink';
 import mainImageSvg from 'assets/svgs/backgroundMain.svg';
 
 import { Header } from 'components/Header';
+import { CATALOG } from 'constants/paths';
 
 export default function Home() {
   return (
@@ -24,7 +25,7 @@ export default function Home() {
           borderRadius="4px"
           justify="center"
           align="center"
-          boxShadow="xl"
+          boxShadow="md"
           bg="gray.800"
           w="100%"
           p="8"
@@ -50,7 +51,7 @@ export default function Home() {
             </Text>
 
             <ButtonLink
-              path="/product"
+              path={CATALOG}
               title="INICIE AGORA A SUA BUSCA"
               icon={RiArrowRightSLine}
             />

@@ -9,8 +9,6 @@ interface ActiveLikProps {
 
 export function ActiveLink({ children, href }: ActiveLikProps) {
   const { pathname } = useLocation();
-  console.log(pathname);
-  console.log(href);
 
   let isActive = false;
 
