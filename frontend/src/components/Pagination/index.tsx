@@ -1,4 +1,4 @@
-import { HStack, Stack, Box, Text } from '@chakra-ui/react';
+import { HStack, Stack, Box, Text, Flex } from '@chakra-ui/react';
 import { useState } from 'react';
 import { PaginationItem } from './PaginationItem';
 
@@ -50,7 +50,11 @@ export function Pagination({
       align="center"
       spacing="6"
     >
-      <Box></Box>
+      <Flex>
+        <Text mr="1">{numberOfElements}</Text> -
+        <Text mx="1">{numberOfElements}</Text> de
+        <Text ml="1">{totalCountRegister}</Text>
+      </Flex>
 
       <HStack>
         {currentPage > 1 + siblingsCount && (

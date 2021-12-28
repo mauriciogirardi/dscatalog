@@ -1,15 +1,6 @@
 import { useEffect, useState } from 'react';
-import {
-  Box,
-  Flex,
-  Text,
-  Icon,
-  Heading,
-  Image,
-  Divider,
-} from '@chakra-ui/react';
-import { MdArrowBackIosNew } from 'react-icons/md';
-import { Link, useParams } from 'react-router-dom';
+import { Box, Flex, Text, Heading, Image, Divider } from '@chakra-ui/react';
+import { useParams } from 'react-router-dom';
 
 import { Header } from 'components/Header';
 import { CATALOG } from 'constants/paths';
@@ -17,6 +8,7 @@ import { Price } from 'components/Price';
 import { getById } from 'utils/requests';
 import { Product } from 'types/product';
 import { SkeletonProductDetail } from './SkeletonProductDetail';
+import { ButtonBackLink } from 'components/ButtonBackLink';
 
 export default function ProductsDetails() {
   const [product, setProduct] = useState({} as Product);
@@ -54,25 +46,7 @@ export default function ProductsDetails() {
         {!loading && product && (
           <Box w="100%" bg="gray.800" borderRadius="4px" p="5" boxShadow="md">
             <>
-              <Link to={CATALOG}>
-                <Flex align="center" mb="4">
-                  <Icon
-                    as={MdArrowBackIosNew}
-                    color="blue.400"
-                    fontSize={16}
-                    mr="2"
-                  />
-                  <Text
-                    fontWeight={600}
-                    color="gray.400"
-                    fontSize="20"
-                    _hover={{ color: 'blue.400' }}
-                    transitionDuration="0.2s"
-                  >
-                    Voltar
-                  </Text>
-                </Flex>
-              </Link>
+              <ButtonBackLink href={CATALOG} />
 
               <Divider mb="8" />
 

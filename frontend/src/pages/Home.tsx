@@ -1,24 +1,19 @@
 import { Box, Flex, Heading, Text, Image } from '@chakra-ui/react';
 import { RiArrowRightSLine } from 'react-icons/ri';
-import { ButtonLink } from 'components/ButtonLink';
-import mainImageSvg from 'assets/svgs/backgroundMain.svg';
 
-import { Header } from 'components/Header';
+import { ContainerCenter } from 'components/ContainerCenter';
+import { ButtonLink } from 'components/ButtonLink';
 import { CATALOG } from 'constants/paths';
+import { Header } from 'components/Header';
+
+import mainImageSvg from 'assets/svgs/backgroundMain.svg';
 
 export default function Home() {
   return (
     <>
       <Header />
 
-      <Flex
-        height={['90vh', '92.5vh']}
-        maxW="1000px"
-        align="center"
-        w="100%"
-        m="auto"
-        px="4"
-      >
+      <ContainerCenter>
         <Flex
           flexDir={['column-reverse', 'column-reverse', 'row']}
           h={['600px', '800px', '510px']}
@@ -64,7 +59,7 @@ export default function Home() {
             />
           </Box>
         </Flex>
-      </Flex>
+      </ContainerCenter>
     </>
   );
 }

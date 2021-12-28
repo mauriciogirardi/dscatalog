@@ -6,9 +6,15 @@ type ButtonLinkProps = {
   title: string;
   path: string;
   icon?: ElementType;
+  w?: string;
 };
 
-export const ButtonLink = ({ path, title, icon }: ButtonLinkProps) => {
+export const ButtonLink = ({
+  path,
+  title,
+  icon,
+  w = '300px',
+}: ButtonLinkProps) => {
   return (
     <Link to={path} style={{ width: '100%' }}>
       <ChakraLink
@@ -22,7 +28,7 @@ export const ButtonLink = ({ path, title, icon }: ButtonLinkProps) => {
         }}
         transitionDuration="0.2s"
         bg="blue.500"
-        w={['100%', '100%', '300px']}
+        w={['100%', '100%', w]}
         h="10"
       >
         <Text fontWeight={500}>{title}</Text>

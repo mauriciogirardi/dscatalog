@@ -1,11 +1,11 @@
 import { Flex, Text } from '@chakra-ui/react';
-import { ADMIN_CATEGORIES, ADMIN_PRODUCTS, ADMIN_USERS } from 'constants/paths';
+import { ADMIN, ADMIN_CATEGORIES, ADMIN_USERS } from 'constants/paths';
 import { Link, useLocation } from 'react-router-dom';
 
 const navbar = [
   {
     name: 'Produtos',
-    href: ADMIN_PRODUCTS,
+    href: ADMIN,
   },
   {
     name: 'Categorias',
