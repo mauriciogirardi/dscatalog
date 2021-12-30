@@ -16,6 +16,7 @@ export const CardProduct = ({ product }: CardProductProps) => {
       bg="white"
       w={['100%', '230px']}
       p="4"
+      as="div"
     >
       <Flex justify="center" w="100%">
         {!!product.imgUrl ? (
@@ -34,12 +35,6 @@ export const CardProduct = ({ product }: CardProductProps) => {
         <Text fontSize="15px" fontWeight={700} color="gray.800" mt="2">
           {product.name}
         </Text>
-
-        {product.description && (
-          <Text fontSize="12px" fontWeight={400} color="gray.500" mt="2">
-            {product.description}
-          </Text>
-        )}
 
         <Price amount={product.price} />
       </Box>

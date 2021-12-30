@@ -6,7 +6,7 @@ import { CardProduct } from 'components/CardProduct';
 import { Product } from 'types/product';
 import { Pagination } from 'components/Pagination';
 import { useEffect, useState } from 'react';
-import { getPage } from 'utils/requests';
+import { requestData } from 'utils/requests';
 import { SpringPage } from 'types/vendor/spring';
 import { SkeletonCatalog } from './SkeletonCatalog';
 
@@ -18,7 +18,13 @@ export default function Catalog() {
   useEffect(() => {
     async function getProduct() {
       setIsLoading(true);
-      const data = await getPage('/products', page - 1);
+      const data = await requestData({
+        url: '/products',
+        params: {
+          page: page,
+          size: 12,
+        },
+      });
 
       if (data.content) {
         setProduct(data);

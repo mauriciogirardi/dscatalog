@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { Header } from 'components/Header';
 import { CATALOG } from 'constants/paths';
 import { Price } from 'components/Price';
-import { getById } from 'utils/requests';
+import { requestData } from 'utils/requests';
 import { Product } from 'types/product';
 import { SkeletonProductDetail } from './SkeletonProductDetail';
 import { ButtonBackLink } from 'components/ButtonBackLink';
@@ -18,7 +18,7 @@ export default function ProductsDetails() {
   useEffect(() => {
     async function getProduct() {
       setLoading(true);
-      const data = await getById(`/products/${id}`);
+      const data = await requestData({ url: `/products/${id}` });
 
       if (data) {
         setProduct(data);
