@@ -9,6 +9,7 @@ export const SkeletonCatalog = () => {
       bg="white"
       w={['100%', '230px']}
       p="4"
+      as="div"
     >
       <Flex justify="center" w="100%">
         <Skeleton w="200px" h="200px" />

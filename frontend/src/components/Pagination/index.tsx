@@ -1,5 +1,4 @@
-import { HStack, Stack, Box, Text, Flex } from '@chakra-ui/react';
-import { useState } from 'react';
+import { HStack, Stack, Text, Flex } from '@chakra-ui/react';
 import { PaginationItem } from './PaginationItem';
 
 type PaginationProps = {

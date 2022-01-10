@@ -18,7 +18,7 @@ export default function Catalog() {
   useEffect(() => {
     async function getProduct() {
       setIsLoading(true);
-      const data = await requestData({
+      const data = await requestData<SpringPage<Product>>({
         url: '/products',
         params: {
           page: page,
@@ -26,7 +26,7 @@ export default function Catalog() {
         },
       });
 
-      if (data.content) {
+      if (data?.content) {
         setProduct(data);
         setIsLoading(false);
       }
@@ -45,7 +45,7 @@ export default function Catalog() {
         </Heading>
 
         {isLoading && (
-          <SimpleGrid mt="10" minChildWidth="200px" gap="5" align="flex-start">
+          <SimpleGrid as="div" mt="10" minChildWidth="200px" gap="5">
             <SkeletonCatalog />
             <SkeletonCatalog />
             <SkeletonCatalog />

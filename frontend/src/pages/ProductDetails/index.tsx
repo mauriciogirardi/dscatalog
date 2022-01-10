@@ -18,7 +18,7 @@ export default function ProductsDetails() {
   useEffect(() => {
     async function getProduct() {
       setLoading(true);
-      const data = await requestData({ url: `/products/${id}` });
+      const data = await requestData<Product>({ url: `/products/${id}` });
 
       if (data) {
         setProduct(data);

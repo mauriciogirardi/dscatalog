@@ -1,4 +1,12 @@
-import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Text,
+  useToast,
+  VStack,
+} from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { RiLockLine, RiMailLine } from 'react-icons/ri';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -8,6 +16,7 @@ import * as yup from 'yup';
 import { ADMIN_AUTH_RECOVER, ADMIN_AUTH_REGISTER } from 'constants/paths';
 import { useShowPassword } from 'hooks/useShowPassword';
 import { Input } from 'components/Form/Input';
+import { requestLogin } from 'utils/requests';
 
 type FormData = {
   email: string;
@@ -24,6 +33,8 @@ const loginSchema = yup.object().shape({
 
 export const Login = () => {
   const { showPassword } = useShowPassword();
+  const toast = useToast();
+
   const {
     register,
     handleSubmit,
@@ -34,9 +45,25 @@ export const Login = () => {
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
-    reset();
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    try {
+      const response = await requestLogin({
+        password: data.password,
+        username: data.email,
+      });
+
+      console.log(response);
+      reset();
+    } catch (e) {
+      console.error(e);
+      toast({
+        title: 'Erro',
+        description: 'Erro ao fazer o login!',
+        status: 'error',
+        isClosable: true,
+        position: 'bottom-left',
+      });
+    }
   };
 
   return (
