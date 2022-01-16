@@ -5,7 +5,7 @@ import { Header } from 'components/Header';
 import { CardProduct } from 'components/CardProduct';
 import { Product } from 'types/product';
 import { Pagination } from 'components/Pagination';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { requestData } from 'utils/requests';
 import { SpringPage } from 'types/vendor/spring';
 import { SkeletonCatalog } from './SkeletonCatalog';
@@ -15,13 +15,13 @@ export default function Catalog() {
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProduct] = useState<SpringPage<Product>>();
 
-  useEffect(() => {
-    async function getProduct() {
+  const getProduct = useCallback(async () => {
+    try {
       setIsLoading(true);
       const data = await requestData<SpringPage<Product>>({
         url: '/products',
         params: {
-          page: page,
+          page: page - 1,
           size: 12,
         },
       });
@@ -30,10 +30,15 @@ export default function Catalog() {
         setProduct(data);
         setIsLoading(false);
       }
+    } catch (e) {
+      console.error(e);
+      setIsLoading(false);
     }
-
-    getProduct();
   }, [page]);
+
+  useEffect(() => {
+    getProduct();
+  }, [getProduct]);
 
   return (
     <>

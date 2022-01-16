@@ -7,20 +7,28 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 const CLIENT_ID = process.env.REACT_APP_CLIENT_ID ?? 'dscatalog-client';
 const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET ?? 'dscatalog-secret';
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: BASE_URL,
 });
 
 async function requestData<T>({
-  ...rest
+  ...config
 }: AxiosRequestConfig): Promise<T | undefined> {
   try {
-    const { data, status } = await api(rest);
+    const user = localStorage.getItem('dsCatalogAuth') ?? '{}';
+    const { access_token } = JSON.parse(user);
+
+    const headers = config.withCredentials
+      ? {
+          ...config.headers,
+          Authorization: `Bearer ${access_token}`,
+        }
+      : config.headers;
+
+    const { data, status } = await api({ ...config, headers });
 
     if (status === 200) {
       return data;
-    } else {
-      console.error('Erro na requizição!');
     }
   } catch (e) {
     console.error(e);

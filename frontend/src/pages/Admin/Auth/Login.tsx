@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Text,
-  useToast,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { RiLockLine, RiMailLine } from 'react-icons/ri';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -16,7 +8,7 @@ import * as yup from 'yup';
 import { ADMIN_AUTH_RECOVER, ADMIN_AUTH_REGISTER } from 'constants/paths';
 import { useShowPassword } from 'hooks/useShowPassword';
 import { Input } from 'components/Form/Input';
-import { requestLogin } from 'utils/requests';
+import { useAuth } from 'hooks/useAuth';
 
 type FormData = {
   email: string;
@@ -32,38 +24,20 @@ const loginSchema = yup.object().shape({
 });
 
 export const Login = () => {
+  const { signIn, loading } = useAuth();
   const { showPassword } = useShowPassword();
-  const toast = useToast();
 
   const {
     register,
     handleSubmit,
-    reset,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<FormData>({
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    try {
-      const response = await requestLogin({
-        password: data.password,
-        username: data.email,
-      });
-
-      console.log(response);
-      reset();
-    } catch (e) {
-      console.error(e);
-      toast({
-        title: 'Erro',
-        description: 'Erro ao fazer o login!',
-        status: 'error',
-        isClosable: true,
-        position: 'bottom-left',
-      });
-    }
+  const onSubmit: SubmitHandler<FormData> = async ({ email, password }) => {
+    signIn({ password, username: email });
   };
 
   return (
@@ -112,12 +86,7 @@ export const Login = () => {
           <Link to={ADMIN_AUTH_RECOVER}>Esqueceu a senha?</Link>
         </Text>
 
-        <Button
-          type="submit"
-          isLoading={isSubmitting}
-          w="100%"
-          colorScheme="blue"
-        >
+        <Button type="submit" isLoading={loading} w="100%" colorScheme="blue">
           Logar
         </Button>
       </Box>

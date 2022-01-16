@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 
 import { SidebarDrawerProvider } from './useSidebarDrawer';
 import { ShowPasswordProvider } from './useShowPassword';
+import { AuthProvider } from './useAuth';
 
 type ProviderProps = {
   children: ReactNode;
@@ -9,8 +10,10 @@ type ProviderProps = {
 
 export const Providers = ({ children }: ProviderProps) => {
   return (
-    <SidebarDrawerProvider>
-      <ShowPasswordProvider>{children}</ShowPasswordProvider>
-    </SidebarDrawerProvider>
+    <AuthProvider>
+      <SidebarDrawerProvider>
+        <ShowPasswordProvider>{children}</ShowPasswordProvider>
+      </SidebarDrawerProvider>
+    </AuthProvider>
   );
 };
