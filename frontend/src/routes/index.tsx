@@ -1,5 +1,5 @@
-import { lazy, Suspense, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
 
 import {
   ADMIN_CATEGORIES,
@@ -16,7 +16,7 @@ import Home from 'pages/Home';
 import { Loader } from 'components/Loader';
 import { Auth } from 'pages/Admin/Auth';
 import { Login } from 'pages/Admin/Auth/Login';
-import { useAuth } from 'hooks/useAuth';
+import { PrivateRouter } from 'components/PrivateRouter';
 
 const ProductDetails = lazy(() => import('pages/ProductDetails'));
 const Register = lazy(() => import('pages/Admin/Auth/Register'));
@@ -27,15 +27,6 @@ const Admin = lazy(() => import('pages/Admin'));
 const User = lazy(() => import('pages/Admin/User'));
 
 export const ComponentRoutes = () => {
-  let navigate = useNavigate();
-  const { pathname } = useLocation();
-  const { user } = useAuth();
-
-  useEffect(() => {
-    if (user?.userId && pathname === ADMIN_AUTH) navigate(ADMIN);
-    if (user?.userId === undefined && pathname === ADMIN) navigate(ADMIN_AUTH);
-  }, [user, pathname, navigate]);
-
   return (
     <Suspense fallback={<Loader />}>
       <Routes>
@@ -46,9 +37,30 @@ export const ComponentRoutes = () => {
         </Route>
 
         <Route path={ADMIN} element={<Admin />}>
-          <Route index element={<h1>Product List</h1>} />
-          <Route path={ADMIN_CATEGORIES} element={<h1>Categories List</h1>} />
-          <Route path={ADMIN_USERS} element={<User />} />
+          <Route
+            index
+            element={
+              <PrivateRouter>
+                <h1>Product List</h1>
+              </PrivateRouter>
+            }
+          />
+          <Route
+            path={ADMIN_CATEGORIES}
+            element={
+              <PrivateRouter>
+                <h1>Categories List</h1>
+              </PrivateRouter>
+            }
+          />
+          <Route
+            path={ADMIN_USERS}
+            element={
+              <PrivateRouter>
+                <User />
+              </PrivateRouter>
+            }
+          />
         </Route>
 
         <Route path={HOME} element={<Home />} />

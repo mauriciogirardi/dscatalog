@@ -7,6 +7,10 @@ type ButtonLinkProps = {
   path: string;
   icon?: ElementType;
   w?: string;
+  bg?: string;
+  hoverColor?: string;
+  sizeIcon?: number;
+  h?: string;
 };
 
 export const ButtonLink = ({
@@ -14,6 +18,10 @@ export const ButtonLink = ({
   title,
   icon,
   w = '300px',
+  bg = 'blue.500',
+  hoverColor = 'blue.600',
+  sizeIcon = 25,
+  h = '10',
 }: ButtonLinkProps) => {
   return (
     <Link to={path} style={{ width: '100%' }}>
@@ -24,15 +32,15 @@ export const ButtonLink = ({
         borderRadius="4px"
         alignItems="center"
         _hover={{
-          bg: 'blue.600',
+          bg: hoverColor,
         }}
         transitionDuration="0.2s"
-        bg="blue.500"
+        bg={bg}
         w={['100%', '100%', w]}
-        h="10"
+        h={h}
       >
         <Text fontWeight={500}>{title}</Text>
-        {!!icon && <Icon as={icon} fontSize={25} mt="-3px" />}
+        {!!icon && <Icon ml="2" as={icon} fontSize={sizeIcon} />}
       </ChakraLink>
     </Link>
   );

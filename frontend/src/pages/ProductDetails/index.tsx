@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { Header } from 'components/Header';
 import { CATALOG } from 'constants/paths';
 import { Price } from 'components/Price';
-import { requestData } from 'utils/requests';
+import { requestData } from 'api/requests';
 import { Product } from 'types/product';
 import { SkeletonProductDetail } from './SkeletonProductDetail';
 import { ButtonBackLink } from 'components/ButtonBackLink';

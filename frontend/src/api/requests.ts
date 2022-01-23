@@ -1,8 +1,13 @@
+import { createStandaloneToast } from '@chakra-ui/react';
 import axios, { AxiosRequestConfig } from 'axios';
+import { ADMIN } from 'constants/paths';
 import qs from 'qs';
 
 import { LoginData } from 'types/login';
+import { getTokenData } from 'utils/getTokenData';
+import history from 'utils/history';
 
+const toast = createStandaloneToast();
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 const CLIENT_ID = process.env.REACT_APP_CLIENT_ID ?? 'dscatalog-client';
 const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET ?? 'dscatalog-secret';
@@ -31,7 +36,7 @@ async function requestData<T>({
       return data;
     }
   } catch (e) {
-    console.error(e);
+    console.error('requestData', e);
   }
 }
 
@@ -56,4 +61,38 @@ function requestLogin({ password, username }: LoginData) {
   });
 }
 
-export { requestData, requestLogin };
+api.interceptors.request.use(
+  (config) => {
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  function (error) {
+    if (error.response.status === 401 || error.response.status === 403) {
+      history.push(ADMIN);
+      toast({
+        title: 'Erro de permissão',
+        description: 'Você não tem permissão para esta página!',
+        status: 'error',
+        isClosable: true,
+        position: 'bottom-left',
+      });
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+const isAuthenticated = (): boolean => {
+  const tokenData = getTokenData();
+  return tokenData && tokenData.exp * 1000 > Date.now() ? true : false;
+};
+
+export { requestData, requestLogin, isAuthenticated };

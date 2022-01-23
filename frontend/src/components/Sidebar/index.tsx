@@ -9,10 +9,13 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { RiLogoutCircleRLine } from 'react-icons/ri';
+import { AiOutlinePoweroff } from 'react-icons/ai';
 
 import { useAuth } from 'hooks/useAuth';
 import { useSidebarDrawer } from 'hooks/useSidebarDrawer';
 import { SidebarNav } from './SidebarNav';
+import { ADMIN_AUTH } from 'constants/paths';
+import { ButtonLink } from 'components/ButtonLink';
 
 export const Sidebar = () => {
   const { isOpen, onClose } = useSidebarDrawer();
@@ -29,20 +32,31 @@ export const Sidebar = () => {
           <DrawerBody>
             <SidebarNav />
           </DrawerBody>
-          {!!user?.token_type && (
-            <DrawerFooter>
+          <DrawerFooter>
+            {!!user?.token_type ? (
               <Button
                 w="100%"
                 size="sm"
                 onClick={signOut}
                 _focus={{ borderColor: 'red' }}
                 colorScheme="red"
-                leftIcon={<RiLogoutCircleRLine />}
+                leftIcon={<AiOutlinePoweroff />}
               >
                 Sair
               </Button>
-            </DrawerFooter>
-          )}
+            ) : (
+              <ButtonLink
+                title="Login"
+                path={ADMIN_AUTH}
+                icon={RiLogoutCircleRLine}
+                w="100%"
+                bg="green.500"
+                hoverColor="green.600"
+                sizeIcon={15}
+                h="8"
+              />
+            )}
+          </DrawerFooter>
         </DrawerContent>
       </DrawerOverlay>
     </Drawer>

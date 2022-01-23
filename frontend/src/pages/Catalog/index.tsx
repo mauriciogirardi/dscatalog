@@ -6,7 +6,7 @@ import { CardProduct } from 'components/CardProduct';
 import { Product } from 'types/product';
 import { Pagination } from 'components/Pagination';
 import { useCallback, useEffect, useState } from 'react';
-import { requestData } from 'utils/requests';
+import { requestData } from 'api/requests';
 import { SpringPage } from 'types/vendor/spring';
 import { SkeletonCatalog } from './SkeletonCatalog';
 

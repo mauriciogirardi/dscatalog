@@ -2,7 +2,7 @@ import { useToast } from '@chakra-ui/react';
 import { ADMIN, HOME } from 'constants/paths';
 import { createContext, ReactNode, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { requestLogin } from 'utils/requests';
+import { requestLogin } from 'api/requests';
 
 interface SignInCredentials {
   username: string;

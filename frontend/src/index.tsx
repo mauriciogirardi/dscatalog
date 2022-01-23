@@ -1,22 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom';
 
 import { ChakraProvider } from '@chakra-ui/react';
 import { Providers } from 'hooks';
 import { theme } from './styles/theme';
 
 import App from './App';
+import history from 'utils/history';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
+    <HistoryRouter history={history}>
       <ChakraProvider theme={theme}>
         <Providers>
           <App />
         </Providers>
       </ChakraProvider>
-    </Router>
+    </HistoryRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );
