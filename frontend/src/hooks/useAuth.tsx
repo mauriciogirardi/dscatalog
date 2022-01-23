@@ -1,5 +1,7 @@
 import { useToast } from '@chakra-ui/react';
+import { ADMIN, HOME } from 'constants/paths';
 import { createContext, ReactNode, useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { requestLogin } from 'utils/requests';
 
 interface SignInCredentials {
@@ -24,7 +26,6 @@ interface AuthProviderProps {
 interface AuthContextData {
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
-  isAuthenticated: boolean;
   user: User | undefined;
   loading: boolean;
 }
@@ -32,28 +33,24 @@ interface AuthContextData {
 const AuthContext = createContext({} as AuthContextData);
 
 const localStorageKey = 'dsCatalogAuth';
-let authChannel: BroadcastChannel;
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  let isAuthenticated = false;
+  let navigate = useNavigate();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User>(() => {
     const data = localStorage.getItem(localStorageKey);
 
     if (data) {
-      isAuthenticated = true;
       return JSON.parse(data);
     }
 
-    isAuthenticated = false;
     return {} as User;
   });
 
   const signOut = () => {
     localStorage.removeItem(localStorageKey);
-    authChannel.postMessage('signOut');
-    isAuthenticated = false;
+    navigate(HOME);
     setUser({} as User);
   };
 
@@ -68,6 +65,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       localStorage.setItem(localStorageKey, JSON.stringify(data));
 
       setUser(data);
+      navigate(ADMIN);
     } catch (e) {
       console.error(e);
       toast({
@@ -85,7 +83,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   return (
     <AuthContext.Provider
       value={{
-        isAuthenticated,
         user,
         loading,
         signOut,

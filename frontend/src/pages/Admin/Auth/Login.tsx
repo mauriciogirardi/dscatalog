@@ -36,7 +36,7 @@ export const Login = () => {
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit: SubmitHandler<FormData> = async ({ email, password }) => {
+  const onSubmit: SubmitHandler<FormData> = ({ email, password }): void => {
     signIn({ password, username: email });
   };
 

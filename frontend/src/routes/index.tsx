@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 
 import {
   ADMIN_CATEGORIES,
@@ -27,26 +27,29 @@ const Admin = lazy(() => import('pages/Admin'));
 const User = lazy(() => import('pages/Admin/User'));
 
 export const ComponentRoutes = () => {
-  const { isAuthenticated } = useAuth();
+  let navigate = useNavigate();
+  const { pathname } = useLocation();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user?.userId && pathname === ADMIN_AUTH) navigate(ADMIN);
+    if (user?.userId === undefined && pathname === ADMIN) navigate(ADMIN_AUTH);
+  }, [user, pathname, navigate]);
 
   return (
     <Suspense fallback={<Loader />}>
       <Routes>
-        {!isAuthenticated && (
-          <Route path={ADMIN_AUTH} element={<Auth />}>
-            <Route index element={<Login />} />
-            <Route path={ADMIN_AUTH_RECOVER} element={<Recover />} />
-            <Route path={ADMIN_AUTH_REGISTER} element={<Register />} />
-          </Route>
-        )}
+        <Route path={ADMIN_AUTH} element={<Auth />}>
+          <Route index element={<Login />} />
+          <Route path={ADMIN_AUTH_RECOVER} element={<Recover />} />
+          <Route path={ADMIN_AUTH_REGISTER} element={<Register />} />
+        </Route>
 
-        {isAuthenticated && (
-          <Route path={ADMIN} element={<Admin />}>
-            <Route index element={<h1>Product List</h1>} />
-            <Route path={ADMIN_CATEGORIES} element={<h1>Categories List</h1>} />
-            <Route path={ADMIN_USERS} element={<User />} />
-          </Route>
-        )}
+        <Route path={ADMIN} element={<Admin />}>
+          <Route index element={<h1>Product List</h1>} />
+          <Route path={ADMIN_CATEGORIES} element={<h1>Categories List</h1>} />
+          <Route path={ADMIN_USERS} element={<User />} />
+        </Route>
 
         <Route path={HOME} element={<Home />} />
         <Route path={CATALOG} element={<Catalog />} />

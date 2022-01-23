@@ -15,7 +15,7 @@ export default function Catalog() {
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProduct] = useState<SpringPage<Product>>();
 
-  const getProduct = useCallback(async () => {
+  const getProduct = useCallback(async (): Promise<void> => {
     try {
       setIsLoading(true);
       const data = await requestData<SpringPage<Product>>({
