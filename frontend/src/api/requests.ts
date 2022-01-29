@@ -1,10 +1,9 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { ADMIN_AUTH } from 'constants/paths';
 import qs from 'qs';
 
+import { ADMIN_AUTH } from 'constants/paths';
 import { LoginData } from 'types/login';
-import { Role } from 'types/user';
-import { getTokenData } from 'utils/getTokenData';
+
 import history from 'utils/history';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -81,20 +80,3 @@ api.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
-export const isAuthenticated = (): boolean => {
-    const tokenData = getTokenData();
-    return tokenData && tokenData.exp * 1000 > Date.now() ? true : false;
-};
-
-export const hasAnyRoles = (roles: Role[]): boolean => {
-    if (roles.length === 0) return true;
-
-    const tokenData = getTokenData();
-
-    if (tokenData !== undefined) {
-        return roles.some((role) => tokenData.authorities.includes(role));
-    }
-
-    return false;
-};

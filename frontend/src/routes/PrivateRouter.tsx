@@ -1,7 +1,7 @@
 import { Navigate, useLocation } from 'react-router-dom';
 
 import { ADMIN, ADMIN_AUTH } from 'constants/paths';
-import { hasAnyRoles, isAuthenticated } from 'api/requests';
+import { hasAnyRoles, isAuthenticated } from 'utils/auth';
 import { Role } from 'types/user';
 
 type PrivateRouterProps = {

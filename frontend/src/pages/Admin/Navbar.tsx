@@ -1,5 +1,5 @@
 import { Flex, Text } from '@chakra-ui/react';
-import { hasAnyRoles } from 'api/requests';
+import { hasAnyRoles } from 'utils/auth';
 import { ADMIN, ADMIN_CATEGORIES, ADMIN_USERS } from 'constants/paths';
 import { Link, useLocation } from 'react-router-dom';
 
