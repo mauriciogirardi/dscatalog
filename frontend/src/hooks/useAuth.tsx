@@ -1,7 +1,7 @@
 import { useToast } from '@chakra-ui/react';
 import { ADMIN, HOME } from 'constants/paths';
 import { createContext, ReactNode, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { requestLogin } from 'api/requests';
 
 interface SignInCredentials {
@@ -17,6 +17,10 @@ interface User {
   userFistName: string;
   userLastName: string;
   userId: number;
+}
+
+interface LocationState {
+  from: string;
 }
 
 interface AuthProviderProps {
@@ -35,8 +39,10 @@ const AuthContext = createContext({} as AuthContextData);
 const localStorageKey = 'dsCatalogAuth';
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
   const toast = useToast();
+
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User>(() => {
     const data = localStorage.getItem(localStorageKey);
@@ -47,6 +53,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     return {} as User;
   });
+
+  const { from } = (location.state as LocationState) || {
+    from: { pathname: ADMIN },
+  };
 
   const signOut = () => {
     localStorage.removeItem(localStorageKey);
@@ -65,7 +75,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       localStorage.setItem(localStorageKey, JSON.stringify(data));
 
       setUser(data);
-      navigate(ADMIN);
+      navigate(from);
     } catch (e) {
       console.error(e);
       toast({

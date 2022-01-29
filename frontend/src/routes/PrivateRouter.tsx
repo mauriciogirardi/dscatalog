@@ -11,7 +11,13 @@ export const PrivateRouter = ({ children }: PrivateRouterProps) => {
   const location = useLocation();
 
   if (!isAuthenticated()) {
-    return <Navigate to={ADMIN_AUTH} state={{ from: location }} replace />;
+    return (
+      <Navigate
+        to={{ pathname: ADMIN_AUTH }}
+        state={{ from: location }}
+        replace
+      />
+    );
   }
 
   return children;

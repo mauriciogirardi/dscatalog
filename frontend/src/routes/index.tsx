@@ -16,7 +16,7 @@ import Home from 'pages/Home';
 import { Loader } from 'components/Loader';
 import { Auth } from 'pages/Admin/Auth';
 import { Login } from 'pages/Admin/Auth/Login';
-import { PrivateRouter } from 'components/PrivateRouter';
+import { PrivateRouter } from './PrivateRouter';
 
 const ProductDetails = lazy(() => import('pages/ProductDetails'));
 const Register = lazy(() => import('pages/Admin/Auth/Register'));
