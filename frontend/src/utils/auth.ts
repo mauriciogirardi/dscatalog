@@ -1,6 +1,8 @@
 import jwtDecode from 'jwt-decode';
 import { LoginResponse } from 'types/loginResponse';
+import history from 'utils/history';
 import { Role } from 'types/user';
+import { ADMIN_AUTH } from 'constants/paths';
 
 type TokenData = {
     exp: number;
@@ -16,6 +18,7 @@ export const getTokenData = (): TokenData | undefined => {
         return jwtDecode(access_token) as TokenData;
     } catch (e) {
         console.error('getTokenData', e);
+        history.push(ADMIN_AUTH);
         return undefined;
     }
 };

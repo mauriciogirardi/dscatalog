@@ -5,17 +5,17 @@ import { Header } from 'components/Header';
 import { Navbar } from './Navbar';
 
 export default function Admin() {
-  return (
-    <>
-      <Header />
+    return (
+        <>
+            <Header />
 
-      <Container maxW="container.lg" py="4">
-        <Navbar />
+            <Container maxW="container.lg" py="4">
+                <Navbar />
 
-        <Box mt="5">
-          <Outlet />
-        </Box>
-      </Container>
-    </>
-  );
+                <Box mt="5">
+                    <Outlet />
+                </Box>
+            </Container>
+        </>
+    );
 }
