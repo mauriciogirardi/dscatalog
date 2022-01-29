@@ -28,19 +28,23 @@ export const Navbar = () => {
     return (
         <Flex as="nav" bg="gray.800" borderRadius="4px" p="4" gap="8">
             {navbar.map(({ name, href, hasPermission }) => (
-                <Text
-                    key={name}
-                    color={isActive(href) ? 'blue.400' : 'gray.400'}
-                    fontWeight={600}
-                    _hover={{ color: 'blue.400' }}
-                    transitionDuration="0.2s"
-                    bg={isActive(href) ? 'blue.900' : 'gray.800'}
-                    py="1"
-                    px="3"
-                    borderRadius="8"
-                >
-                    {hasPermission && <Link to={href}>{name}</Link>}
-                </Text>
+                <>
+                    {hasPermission && (
+                        <Text
+                            key={name}
+                            color={isActive(href) ? 'blue.400' : 'gray.400'}
+                            fontWeight={600}
+                            _hover={{ color: 'blue.400' }}
+                            transitionDuration="0.2s"
+                            bg={isActive(href) ? 'blue.900' : 'gray.800'}
+                            py="1"
+                            px="3"
+                            borderRadius="8"
+                        >
+                            <Link to={href}>{name}</Link>
+                        </Text>
+                    )}
+                </>
             ))}
         </Flex>
     );

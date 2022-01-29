@@ -1,15 +1,12 @@
-import { createStandaloneToast } from '@chakra-ui/react';
 import axios, { AxiosRequestConfig } from 'axios';
-import { ADMIN } from 'constants/paths';
+import { ADMIN_AUTH } from 'constants/paths';
 import qs from 'qs';
 
 import { LoginData } from 'types/login';
+import { Role } from 'types/user';
 import { getTokenData } from 'utils/getTokenData';
 import history from 'utils/history';
 
-type Role = 'ROLE_OPERATOR' | 'ROLE_ADMIN';
-
-const toast = createStandaloneToast();
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 const CLIENT_ID = process.env.REACT_APP_CLIENT_ID ?? 'dscatalog-client';
 const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET ?? 'dscatalog-secret';
@@ -77,15 +74,8 @@ api.interceptors.response.use(
         return response;
     },
     function (error) {
-        if (error.response.status === 401 || error.response.status === 403) {
-            history.push(ADMIN);
-            toast({
-                title: 'Erro de permissão',
-                description: 'Você não tem permissão para esta página!',
-                status: 'error',
-                isClosable: true,
-                position: 'bottom-left',
-            });
+        if (error.response.status === 401) {
+            history.push(ADMIN_AUTH);
         }
 
         return Promise.reject(error);
