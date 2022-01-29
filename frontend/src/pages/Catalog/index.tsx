@@ -1,14 +1,15 @@
+import { useCallback, useEffect, useState } from 'react';
 import { Container, Heading, SimpleGrid } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
-import { Header } from 'components/Header';
-import { CardProduct } from 'components/CardProduct';
-import { Product } from 'types/product';
-import { Pagination } from 'components/Pagination';
-import { useCallback, useEffect, useState } from 'react';
-import { requestData } from 'api/requests';
-import { SpringPage } from 'types/vendor/spring';
 import { SkeletonCatalog } from './SkeletonCatalog';
+import { CardProduct } from 'components/CardProduct';
+import { SpringPage } from 'types/vendor/spring';
+import { Pagination } from 'components/Pagination';
+import { Product } from 'types/product';
+import { Header } from 'components/Header';
+
+import requestData from 'api/requests';
 
 export default function Catalog() {
   const [page, setPage] = useState(1);

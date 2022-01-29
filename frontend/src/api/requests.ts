@@ -7,92 +7,104 @@ import { LoginData } from 'types/login';
 import { getTokenData } from 'utils/getTokenData';
 import history from 'utils/history';
 
+type Role = 'ROLE_OPERATOR' | 'ROLE_ADMIN';
+
 const toast = createStandaloneToast();
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 const CLIENT_ID = process.env.REACT_APP_CLIENT_ID ?? 'dscatalog-client';
 const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET ?? 'dscatalog-secret';
 
 export const api = axios.create({
-  baseURL: BASE_URL,
+    baseURL: BASE_URL,
 });
 
-async function requestData<T>({
-  ...config
+export default async function requestData<T>({
+    ...config
 }: AxiosRequestConfig): Promise<T | undefined> {
-  try {
-    const user = localStorage.getItem('dsCatalogAuth') ?? '{}';
-    const { access_token } = JSON.parse(user);
+    try {
+        const user = localStorage.getItem('dsCatalogAuth') ?? '{}';
+        const { access_token } = JSON.parse(user);
 
-    const headers = config.withCredentials
-      ? {
-          ...config.headers,
-          Authorization: `Bearer ${access_token}`,
+        const headers = config.withCredentials
+            ? {
+                  ...config.headers,
+                  Authorization: `Bearer ${access_token}`,
+              }
+            : config.headers;
+
+        const { data, status } = await api({ ...config, headers });
+
+        if (status === 200) {
+            return data;
         }
-      : config.headers;
-
-    const { data, status } = await api({ ...config, headers });
-
-    if (status === 200) {
-      return data;
+    } catch (e) {
+        console.error('requestData', e);
     }
-  } catch (e) {
-    console.error('requestData', e);
-  }
 }
 
-function requestLogin({ password, username }: LoginData) {
-  const headers = {
-    Authorization: `Basic ${window.btoa(CLIENT_ID + ':' + CLIENT_SECRET)}`,
-    'Content-Type': 'application/x-www-form-urlencoded',
-  };
+export const requestLogin = ({ password, username }: LoginData) => {
+    const headers = {
+        Authorization: `Basic ${window.btoa(CLIENT_ID + ':' + CLIENT_SECRET)}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+    };
 
-  const data = qs.stringify({
-    password,
-    username,
-    grant_type: 'password',
-  });
+    const data = qs.stringify({
+        password,
+        username,
+        grant_type: 'password',
+    });
 
-  return axios({
-    method: 'POST',
-    baseURL: BASE_URL,
-    url: '/oauth/token',
-    data,
-    headers,
-  });
-}
+    return axios({
+        method: 'POST',
+        baseURL: BASE_URL,
+        url: '/oauth/token',
+        data,
+        headers,
+    });
+};
 
 api.interceptors.request.use(
-  (config) => {
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
+    (config) => {
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
 );
 
 api.interceptors.response.use(
-  function (response) {
-    return response;
-  },
-  function (error) {
-    if (error.response.status === 401 || error.response.status === 403) {
-      history.push(ADMIN);
-      toast({
-        title: 'Erro de permissão',
-        description: 'Você não tem permissão para esta página!',
-        status: 'error',
-        isClosable: true,
-        position: 'bottom-left',
-      });
-    }
+    function (response) {
+        return response;
+    },
+    function (error) {
+        if (error.response.status === 401 || error.response.status === 403) {
+            history.push(ADMIN);
+            toast({
+                title: 'Erro de permissão',
+                description: 'Você não tem permissão para esta página!',
+                status: 'error',
+                isClosable: true,
+                position: 'bottom-left',
+            });
+        }
 
-    return Promise.reject(error);
-  }
+        return Promise.reject(error);
+    }
 );
 
-const isAuthenticated = (): boolean => {
-  const tokenData = getTokenData();
-  return tokenData && tokenData.exp * 1000 > Date.now() ? true : false;
+export const isAuthenticated = (): boolean => {
+    const tokenData = getTokenData();
+    return tokenData && tokenData.exp * 1000 > Date.now() ? true : false;
 };
 
-export { requestData, requestLogin, isAuthenticated };
+export const hasAnyRoles = (roles: Role[]): boolean => {
+    if (roles.length === 0) return true;
+
+    const tokenData = getTokenData();
+
+    if (tokenData !== undefined) {
+        return roles.some((role) => tokenData.authorities.includes(role));
+    }
+
+    return false;
+};

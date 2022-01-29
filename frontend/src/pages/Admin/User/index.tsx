@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { User as UserProps } from 'types/user';
 import { SpringPage } from 'types/vendor/spring';
-import { requestData } from 'api/requests';
+
+import requestData from 'api/requests';
 
 export default function User() {
   const [page, setPage] = useState(1);

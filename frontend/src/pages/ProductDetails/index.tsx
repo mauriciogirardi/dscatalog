@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { Box, Flex, Text, Heading, Image, Divider } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 
-import { Header } from 'components/Header';
-import { CATALOG } from 'constants/paths';
-import { Price } from 'components/Price';
-import { requestData } from 'api/requests';
-import { Product } from 'types/product';
 import { SkeletonProductDetail } from './SkeletonProductDetail';
+import { Product } from 'types/product';
+import { CATALOG } from 'constants/paths';
+import { Header } from 'components/Header';
+import { Price } from 'components/Price';
 import { ButtonBackLink } from 'components/ButtonBackLink';
+
+import requestData from 'api/requests';
 
 export default function ProductsDetails() {
   const [product, setProduct] = useState({} as Product);
