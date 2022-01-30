@@ -1,0 +1,22 @@
+select {
+    width: 100%;
+    outline: 0;
+    color: #eeeef2;
+}
+
+select:focus {
+    border-bottom: 1px solid #3182ce;
+}
+
+select.select_flushed {
+    background-color: transparent;
+    border-bottom: 1px solid #4b4d63;
+}
+
+select:last-child(0) {
+    color: red;
+}
+
+option {
+    background-color: #181b23;
+}
