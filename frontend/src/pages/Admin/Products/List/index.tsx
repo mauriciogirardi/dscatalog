@@ -1,36 +1,45 @@
+import { useCallback, useEffect, useState } from 'react';
 import { Box, Button, Flex } from '@chakra-ui/react';
-import { Filter } from 'components/Filter';
+
 import { CardRowProduct } from '../components/CardRowProduct';
+import { SkeletonRow } from '../components/SkeletonRow';
+import { SpringPage } from 'types/vendor/spring';
+import { Pagination } from 'components/Pagination';
+import { Product } from 'types/product';
+import { Filter } from 'components/Filter';
 
-const products = [
-    {
-        id: 15,
-        name: 'PC Gamer Weed',
-        description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        date: '2020-07-14T10:00:00Z',
-        imgUrl: 'https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/15-big.jpg',
-        price: 2200,
-        categories: [
-            { id: 3, name: 'Computer' },
-            { id: 4, name: 'Closets' },
-            { id: 5, name: 'Radio' },
-        ],
-    },
-
-    {
-        id: 10,
-        name: 'PC Gamer Weed',
-        description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        date: '2020-07-14T10:00:00Z',
-        imgUrl: 'https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/15-big.jpg',
-        price: 2200,
-        categories: [{ id: 3, name: 'Computer' }],
-    },
-];
+import requestData from 'api/requests';
 
 export const List = () => {
+    const [page, setPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [products, setProduct] = useState<SpringPage<Product>>();
+
+    const getProduct = useCallback(async (): Promise<void> => {
+        try {
+            setIsLoading(true);
+            const data = await requestData<SpringPage<Product>>({
+                url: '/products',
+                params: {
+                    page: page - 1,
+                    size: 12,
+                },
+            });
+
+            if (data?.content) {
+                setProduct(data);
+                setIsLoading(false);
+            }
+        } catch (e) {
+            console.error(e);
+            setIsLoading(false);
+        }
+    }, [page]);
+
+    useEffect(() => {
+        getProduct();
+    }, [getProduct]);
+
     return (
         <>
             <Flex
@@ -50,13 +59,35 @@ export const List = () => {
                 <Filter />
             </Flex>
 
-            <Flex w="100%" gap="5" flexDir="column" mt="6">
-                {products.map((product) => (
-                    <Box key={product.id}>
-                        <CardRowProduct product={product} />
-                    </Box>
-                ))}
-            </Flex>
+            {isLoading && (
+                <Flex w="100%" gap="5" flexDir="column" mt="6">
+                    <SkeletonRow />
+                    <SkeletonRow />
+                    <SkeletonRow />
+                    <SkeletonRow />
+                    <SkeletonRow />
+                </Flex>
+            )}
+
+            {!isLoading && products?.content && (
+                <>
+                    <Flex w="100%" gap="5" flexDir="column" mt="6">
+                        {products.content.map((product) => (
+                            <Box key={product.id}>
+                                <CardRowProduct product={product} />
+                            </Box>
+                        ))}
+                    </Flex>
+
+                    <Pagination
+                        currentPage={products.number + 1}
+                        totalCountRegister={products.totalElements}
+                        onPageChange={setPage}
+                        numberOfElements={products.numberOfElements ?? 0}
+                        lastPage={products.totalPages}
+                    />
+                </>
+            )}
         </>
     );
 };
