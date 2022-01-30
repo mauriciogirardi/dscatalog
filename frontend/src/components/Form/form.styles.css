@@ -2,6 +2,7 @@ select {
     width: 100%;
     outline: 0;
     color: #eeeef2;
+    height: 40px;
 }
 
 select.select_flushed:focus {
@@ -15,7 +16,6 @@ select.select_flushed {
 
 select.select_solid {
     background-color: #181b23;
-    height: 40px;
     padding: 0 16px;
     border-radius: 4px;
 }
