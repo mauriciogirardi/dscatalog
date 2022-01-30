@@ -4,7 +4,7 @@ select {
     color: #eeeef2;
 }
 
-select:focus {
+select.select_flushed:focus {
     border-bottom: 1px solid #3182ce;
 }
 
@@ -13,8 +13,15 @@ select.select_flushed {
     border-bottom: 1px solid #4b4d63;
 }
 
-select:last-child(0) {
-    color: red;
+select.select_solid {
+    background-color: #181b23;
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 4px;
+}
+
+select.select_solid:focus {
+    border: 1px solid #3182ce;
 }
 
 option {

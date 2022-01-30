@@ -3,11 +3,12 @@ import './form.styles.css';
 interface SelectProps {
     data: [];
     placeholder?: string;
+    flushed?: boolean;
 }
 
-export const Select = ({ data, placeholder }: SelectProps) => {
+export const Select = ({ data, placeholder, flushed = true }: SelectProps) => {
     return (
-        <select className="select_flushed">
+        <select className={flushed ? 'select_flushed' : 'select_solid'}>
             <option value="" className="placeholder">
                 {placeholder}
             </option>

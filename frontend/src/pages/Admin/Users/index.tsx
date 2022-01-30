@@ -4,6 +4,7 @@ import { User as UserProps } from 'types/user';
 import { SpringPage } from 'types/vendor/spring';
 
 import requestData from 'api/requests';
+import { Navbar } from '../Navbar';
 
 export const Users = () => {
     const [page, setPage] = useState(1);
@@ -38,6 +39,7 @@ export const Users = () => {
 
     return (
         <>
+            {/* <Navbar /> */}
             <h1>User</h1>
         </>
     );
