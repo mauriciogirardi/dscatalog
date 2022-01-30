@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Box, Button, Flex } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 import { CardRowProduct } from '../components/CardRowProduct';
 import { SkeletonRow } from '../components/SkeletonRow';
@@ -11,6 +12,8 @@ import { Filter } from 'components/Filter';
 import requestData from 'api/requests';
 
 export const List = () => {
+    const navigate = useNavigate();
+
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [products, setProduct] = useState<SpringPage<Product>>();
@@ -53,6 +56,7 @@ export const List = () => {
                     w={['100%', '100%', '12%']}
                     h={['40px', '40px', '60px']}
                     colorScheme="blue"
+                    onClick={() => navigate('new')}
                 >
                     Adicionar
                 </Button>

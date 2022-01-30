@@ -22,8 +22,8 @@ export const CardRowProduct = ({ product }: CardRowProductProps) => {
             boxShadow="md"
             bg={['white']}
             w="100%"
-            p="4"
-            px={['8', '8', '0']}
+            py="4"
+            px={['8', '8', '4']}
             flexDir={['column', 'column', 'row']}
         >
             <Flex
@@ -31,7 +31,7 @@ export const CardRowProduct = ({ product }: CardRowProductProps) => {
                 borderBottom={['1px solid #ccc', '1px solid #ccc', '0']}
                 justify={['center']}
             >
-                {!!product.imgUrl && (
+                {!!product.imgUrl ? (
                     <Image
                         mr={['0', '0', '5']}
                         mb={['5', '5', '0']}
@@ -39,6 +39,13 @@ export const CardRowProduct = ({ product }: CardRowProductProps) => {
                         alt={product.name}
                         objectFit="cover"
                         w="100px"
+                    />
+                ) : (
+                    <Image
+                        mr={['0', '0', '5']}
+                        mb={['5', '5', '0']}
+                        src="gibbresh.png"
+                        fallbackSrc="https://via.placeholder.com/100"
                     />
                 )}
             </Flex>

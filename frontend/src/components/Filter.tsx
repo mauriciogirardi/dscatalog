@@ -34,7 +34,11 @@ export const Filter = () => {
                 </Flex>
 
                 <Flex w={['100%', '100%', '50%']}>
-                    <Select data={[]} placeholder="Categoria" />
+                    <Select
+                        data={[]}
+                        placeholder="Categoria"
+                        name="categories"
+                    />
 
                     <Button
                         title="Limpar filtro"
