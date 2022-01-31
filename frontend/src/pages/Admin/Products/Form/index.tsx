@@ -1,22 +1,51 @@
 import { Box, Button, Flex, Spinner, Text, useToast } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import Select, { StylesConfig } from 'react-select';
 
 import { Textarea } from 'components/Form/Textarea';
 import { Product } from 'types/product';
-import { Select } from 'components/Form/Select';
 import { Input } from 'components/Form/Input';
 
 import requestData from 'api/requests';
+import { Category } from 'types/category';
 
 const formSchema = yup.object().shape({
     name: yup.string().required('Nome é um campo obrigatório!'),
     price: yup.string().required('Valor é um campo obrigatório!'),
     description: yup.string().required('Descrição é um campo obrigatório!'),
+    categories: yup
+        .array()
+        .required('Categoria é um campo obrigatório!')
+        .min(1),
 });
+
+type CategoryProps = {
+    content: Category[];
+};
+
+const styleSelect: StylesConfig<Category> = {
+    control: (styles) => ({
+        ...styles,
+        backgroundColor: '#181b23',
+        border: 0,
+        color: '#363636',
+        ':focus-within': {
+            background: '#1F2029',
+            border: '1px solid #4299e1',
+        },
+    }),
+    option: (styles) => ({
+        ...styles,
+        backgroundColor: '#181b23',
+        ':hover': { background: '#22252e', cursor: 'pointer' },
+    }),
+    placeholder: (styles) => ({ ...styles, color: '#797D9A' }),
+    menuList: (styles) => ({ ...styles, background: '#181b23' }),
+};
 
 export const Form = () => {
     const toast = useToast();
@@ -24,12 +53,15 @@ export const Form = () => {
     const navigate = useNavigate();
     const isEditing = productId !== 'new';
 
+    const [selectCategories, setSelectCategories] = useState<Category[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingSelect, setIsLoadingSelect] = useState(false);
     const [isLoadingProduct, setIsLoadingProduct] = useState(false);
 
     const {
         register,
         handleSubmit,
+        control,
         formState: { errors },
         setValue,
     } = useForm<Product>({
@@ -51,7 +83,7 @@ export const Form = () => {
                 name,
                 description,
                 price: Number(price),
-                categories: isEditing ? categories : [{ id: 3 }],
+                categories,
                 date: new Date(),
                 imgUrl: isEditing ? imgUrl : '',
             };
@@ -78,6 +110,23 @@ export const Form = () => {
             setIsLoading(false);
         }
     };
+
+    const getCategories = useCallback(async () => {
+        try {
+            setIsLoadingSelect(true);
+            const data = await requestData<CategoryProps>({
+                url: `/categories`,
+            });
+
+            if (data) {
+                setSelectCategories(data.content);
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsLoadingSelect(false);
+        }
+    }, []);
 
     const getProduct = useCallback(async () => {
         try {
@@ -106,7 +155,9 @@ export const Form = () => {
         if (isEditing) {
             getProduct();
         }
-    }, [isEditing, getProduct]);
+
+        getCategories();
+    }, [isEditing, getProduct, getCategories]);
 
     return (
         <>
@@ -154,13 +205,39 @@ export const Form = () => {
                                         name="price"
                                         error={errors.price}
                                     />
-                                    <Select
-                                        data={[]}
-                                        placeholder="Categorias"
-                                        flushed={false}
+
+                                    <Controller
                                         {...register('categories')}
                                         name="categories"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Select
+                                                {...field}
+                                                isMulti
+                                                name="categories"
+                                                placeholder="Categorias"
+                                                options={selectCategories}
+                                                isLoading={isLoadingSelect}
+                                                getOptionValue={(category) =>
+                                                    String(category.id)
+                                                }
+                                                getOptionLabel={(category) =>
+                                                    category.name
+                                                }
+                                                styles={styleSelect}
+                                            />
+                                        )}
                                     />
+                                    {errors.categories && (
+                                        <Text
+                                            fontSize="12px"
+                                            color="red.400"
+                                            marginTop="-10px"
+                                        >
+                                            Campo obrigatório escolha pelomenos
+                                            uma categoria
+                                        </Text>
+                                    )}
 
                                     <Flex
                                         align={['flex-start', 'center']}
