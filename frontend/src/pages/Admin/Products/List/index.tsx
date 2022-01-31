@@ -18,7 +18,7 @@ export const List = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [products, setProduct] = useState<SpringPage<Product>>();
 
-    const getProduct = useCallback(async (): Promise<void> => {
+    const getProducts = useCallback(async (): Promise<void> => {
         try {
             setIsLoading(true);
             const data = await requestData<SpringPage<Product>>({
@@ -40,8 +40,8 @@ export const List = () => {
     }, [page]);
 
     useEffect(() => {
-        getProduct();
-    }, [getProduct]);
+        getProducts();
+    }, [getProducts]);
 
     return (
         <>
@@ -79,7 +79,10 @@ export const List = () => {
                     <Flex w="100%" gap="5" flexDir="column" mt="6">
                         {products.content.map((product) => (
                             <Box key={product.id}>
-                                <CardRowProduct product={product} />
+                                <CardRowProduct
+                                    product={product}
+                                    onDelete={() => getProducts()}
+                                />
                             </Box>
                         ))}
                     </Flex>

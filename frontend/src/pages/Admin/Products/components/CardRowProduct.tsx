@@ -1,19 +1,59 @@
-import { Button, Flex, Image, Tag, Text, Tooltip } from '@chakra-ui/react';
+import {
+    Button,
+    Flex,
+    Image,
+    Tag,
+    Text,
+    Tooltip,
+    useToast,
+} from '@chakra-ui/react';
+import requestData from 'api/requests';
 
 import { Price } from 'components/Price';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Product } from 'types/product';
 import { textDots } from 'utils/formatters';
 
 type CardRowProductProps = {
     product: Product;
+    onDelete: () => void;
 };
 
-export const CardRowProduct = ({ product }: CardRowProductProps) => {
+export const CardRowProduct = ({ product, onDelete }: CardRowProductProps) => {
     const navigate = useNavigate();
+    const toast = useToast();
+
+    const [isDelete, setIsDelete] = useState(false);
 
     const handleEdit = (id: number) => {
         navigate(`${id}`);
+    };
+
+    const handleDeleteProduct = async (id: number, name: string) => {
+        try {
+            setIsDelete(true);
+            await requestData<Product>({
+                method: 'DELETE',
+                url: `/products/${id}`,
+                withCredentials: true,
+            });
+
+            onDelete();
+
+            toast({
+                title: `Deletar.`,
+                description: `O produto ${name} foi deletado com sucesso`,
+                status: 'success',
+                duration: 4000,
+                isClosable: true,
+                position: 'bottom-left',
+            });
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsDelete(false);
+        }
     };
 
     return (
@@ -114,6 +154,7 @@ export const CardRowProduct = ({ product }: CardRowProductProps) => {
                     w={['50%', '50%', '120px']}
                     h="34px"
                     onClick={() => handleEdit(product.id)}
+                    disabled={isDelete}
                 >
                     Editar
                 </Button>
@@ -122,6 +163,10 @@ export const CardRowProduct = ({ product }: CardRowProductProps) => {
                     colorScheme="red"
                     w={['50%', '50%', '120px']}
                     h="34px"
+                    isLoading={isDelete}
+                    onClick={() =>
+                        handleDeleteProduct(product.id, product.name)
+                    }
                 >
                     Excluir
                 </Button>
